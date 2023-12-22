@@ -9,7 +9,6 @@ class ArticlesController < ApplicationController
 
     def new
         @article = Article.new
-        flash[:notice] = "Article was created successfully."
     end
 
     def edit
@@ -20,6 +19,7 @@ class ArticlesController < ApplicationController
         @article = Article.new(article_params)
         
         if @article.save
+        flash[:notice] = "Article was created successfully."
             redirect_to @article
         else
             render 'new', status: :unprocessable_entity
@@ -46,7 +46,7 @@ class ArticlesController < ApplicationController
     end
 
     def article_params
-        params.require(:article).permit(:title, :description)
+        params.require(:article).permit(:title, :sub_title, :description)
     end
 
 end
