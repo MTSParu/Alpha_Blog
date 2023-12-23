@@ -1,6 +1,9 @@
 class ArticlesController < ApplicationController
     before_action :set_article, only: [:show, :edit, :update, :destroy]
     def show
+        @article = Article.find(params[:id])
+        @comments = @article.comments
+        @comment = Comment.new
     end
 
     def index
@@ -36,8 +39,12 @@ class ArticlesController < ApplicationController
     end
 
     def destroy
-        @article.destroy
-        redirect_to articles_path
+        if @article.destroy
+            flash[:notice] = "Article was deleted successfully"    
+            redirect_to articles_path
+        else
+            render 'destroy', status: :unprocessable_entity
+        end
     end
 
     private
