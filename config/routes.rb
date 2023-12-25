@@ -4,6 +4,7 @@ get 'about', to: 'pages#about'
 resources :articles, only: [:show, :index, :new, :create, :edit, :update, :destroy] do
     resources :comments
 end
-        
+get 'signup', to: 'users#new'
+resources :users, except: [:new]
 end
 
