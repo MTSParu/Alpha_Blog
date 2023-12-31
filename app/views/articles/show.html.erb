@@ -20,23 +20,26 @@
                     edited some <%= time_ago_in_words(@article.updated_at) %> ago</small>
                 </div>
             </div>
-        </div>
-    
+        </div>    
         <div class="col-8 mt-4">
             <h2>Comments</h2>
             <% @comments.each do |comment| %>
                 <strong><%= comment.user&.username %></strong>
                 <p><strong><%= comment.created_at.strftime("%B %d, %Y %I:%M %p") %></strong>: <%= comment.body %></p>
             <% end %>
-            <%= form_for([@article, @comment]) do |f| %>
-                <div class="field">
-                    <%= f.text_area :body, class: "form-control shadow rounded" %>
-                </div>
-                <div class="mb-3">
-                    <div class="actions">
-                        <%= f.submit "Post", class: "btn btn-outline-secondary" %>
-                    </div>
-                </div>
+            <% if logged_in? %>
+                <%= form_for([@article, @comment]) do |f| %>
+                        <div class="field">
+                            <%= f.text_area :body, class: "form-control shadow rounded" %>
+                        </div>
+                        <div class="mb-3">
+                            <div class="actions">
+                                <%= f.submit "Post", class: "btn btn-outline-secondary" %>
+                            </div>
+                        </div>
+                <% end %>
+            <% else %>
+                <p>Please log in to leave a comment.</p>
             <% end %>
         </div>
     </div>
