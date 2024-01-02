@@ -70,3 +70,5 @@ group :test do
 end
 
 gem 'acts_as_paranoid'
+
+gem 'image_processing', '~> 1.2'

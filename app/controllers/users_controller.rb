@@ -3,7 +3,28 @@ class UsersController < ApplicationController
     before_action :require_user, only: [:edit, :update]
     before_action :require_same_user, only: [:edit, :update, :destroy]
 
+
+    def acceptable_image
+        return unless profile_image.attached?
+        
+        unless profile_image.blob.byte_size <= 1.megabyte
+            errors.add(:profile_image, "is too big")
+        end
+
+        acceptable_types = ["image/jpeg", "image/png"]
+        unless acceptable_types.include?(profile_image.content_type)
+            errors.add(:profile_image, "must be a JPEG or PNG")
+        end
+    end
+
+    def profile_image
+        if profile_image_attachment.present? && profile_image_attachment.attached?
+            profile_image_attachment.service_url
+        end
+    end
+
     def show
+        @user = User.find(params[:id])
         @articles = @user.articles.paginate(page: params[:page], per_page:2)
     end
 
@@ -19,7 +40,7 @@ class UsersController < ApplicationController
     end
 
     def update
-        if @user.update(user_params)
+        if @user.update!(user_params)
             flash[:notice] = "Your account information was successfully updated"
             redirect_to @user
         else
@@ -47,7 +68,7 @@ class UsersController < ApplicationController
 
     private
     def user_params
-        params.require(:user).permit(:username, :email, :password)
+        params.require(:user).permit(:profile_image, :username, :email, :password)
     end
 
     def set_user
