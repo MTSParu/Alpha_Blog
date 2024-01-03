@@ -5,8 +5,10 @@
             <div class="card text-center shadow mb-5 bg-white rounded">
                 <div class="card-header fst-italic">
                     by <%= @article.user.username if @article.user %>
-                    <%= link_to gravatar_for(@article.user), user_path(@article.user) %>
                 </div>
+                <% if @article.user.profile_image.present? %>
+                    <%= image_tag @article.user.profile_image, class: 'profile-image-show rounded-circle mx-auto' %>
+                <% end %>    
                 <div class="card-body">
                     <h5 class="card-title"><%= @article.sub_title %></h5>
                     <div class="card-text text-left"><%= simple_format(@article.description) %></div>
@@ -25,7 +27,7 @@
             <h2>Comments</h2>
             <% @comments.each do |comment| %>
                 <strong><%= comment.user&.username %></strong>
-                <p><strong><%= comment.created_at.strftime("%B %d, %Y %I:%M %p") %></strong>: <%= comment.body %></p>
+                <p><strong><%= comment.created_at.strftime("%B %d, %Y %I:%M %p") %></strong>: <%= comment.body %></p>                   
             <% end %>
             <% if logged_in? %>
                 <%= form_for([@article, @comment]) do |f| %>
