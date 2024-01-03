@@ -79,3 +79,28 @@ body {
   height: 100px;
   margin-top: 4px;
 }
+
+.menu-nav {       
+  display: flex;
+  justify-content: space-between;
+}
+
+.three-dots:after {
+  cursor: pointer;
+  color: #444;
+  content: '\2807';
+  font-size: 20px;
+  padding: 0 5px;
+}
+
+.advance-manu {
+  background-color: lightgrey;
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 0.1s, z-index 0.1s, max-height 1s;
+}
+
+.dropdown-container:focus .advance-manu {
+  opacity: 1;
+  max-height: 100vh;
+}

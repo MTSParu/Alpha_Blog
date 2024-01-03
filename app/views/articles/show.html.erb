@@ -27,18 +27,32 @@
             <h2>Comments</h2>
             <% @comments.each do |comment| %>
                 <strong><%= comment.user&.username %></strong>
-                <p><strong><%= comment.created_at.strftime("%B %d, %Y %I:%M %p") %></strong>: <%= comment.body %></p>                   
+                <div class="menu-nav">
+                    <p><strong><%= comment.created_at.strftime("%B %d, %Y %I:%M %p") %></strong>: <%= comment.body %></p>
+                    <div class="dropdown-container" tabindex="-1">
+                        <div class="three-dots"></div>
+                            <div class="advance-manu">
+                                <% if logged_in? %>
+                                    <% if comment.user == current_user || current_user.admin %>
+                                            <a href="#"><div>Edit</div></a>
+                                            <%= link_to "Delete", article_comment_path(@article.id, comment.id), data: {"turbo-method": :delete} %>
+                                    <% end %>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <% end %>
             <% if logged_in? %>
                 <%= form_for([@article, @comment]) do |f| %>
-                        <div class="field">
-                            <%= f.text_area :body, class: "form-control shadow rounded" %>
+                    <div class="field">
+                        <%= f.text_area :body, class: "form-control shadow rounded" %>
+                    </div>
+                    <div class="mb-3">
+                        <div class="actions">
+                            <%= f.submit "Post", class: "btn btn-outline-secondary" %>
                         </div>
-                        <div class="mb-3">
-                            <div class="actions">
-                                <%= f.submit "Post", class: "btn btn-outline-secondary" %>
-                            </div>
-                        </div>
+                    </div>
                 <% end %>
             <% else %>
                 <p>Please log in to leave a comment.</p>

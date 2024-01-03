@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
     before_action :find_article
     before_action :require_user, only: [:create ]
+    before_action :require_same_user, only: [:edit, :update, :destroy]
   
     def create
       @comment = @article.comments.new(comment_params)
@@ -28,14 +29,16 @@ class CommentsController < ApplicationController
       if @comment.update(comment_params)
         redirect_to @article
       else
-        render 'edit'
+        render 'edit', status: :unprocessable_entity
       end
     end
   
     def destroy
-      @comment = @article.comments.find(params[:id])
-      @comment.destroy
-      redirect_to @article
+      if @comment.destroy    
+          redirect_to articles_path
+      else
+          render 'destroy', status: :unprocessable_entity
+      end
     end
   
     private
@@ -52,6 +55,14 @@ class CommentsController < ApplicationController
 
   def user_params
     params.require(:user).permit(:username, :email, :password)
-end
+  end
 
+  def require_same_user
+    @comment = Comment.find(params[:id])
+    if current_user != @comment.user && !current_user.admin?
+        flash[:alert] = "You can only edit or delete your own comment"
+        redirect_to @article
+    end
+  end
+  
 end
