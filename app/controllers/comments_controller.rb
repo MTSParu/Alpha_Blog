@@ -35,7 +35,7 @@ class CommentsController < ApplicationController
   
     def destroy
       if @comment.destroy    
-          redirect_to articles_path
+          redirect_back(fallback_location: article_path(@article))
       else
           render 'destroy', status: :unprocessable_entity
       end
